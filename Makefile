@@ -1,4 +1,4 @@
-all: adb/adbd
+all: adb/adbd adbd.service
 
 libcutils/libcutils.a: libcutils/*.c libcutils/*.cpp
 	pushd libcutils ; make ; popd
@@ -14,4 +14,8 @@ clean:
 	pushd adb ; make clean ; popd
 	rm -f adb/adbd libcutils/libcutils.a base/libbase.a
 
-install: FIXME
+install: all
+	install -d -m 0755 $(DESTDIR)/$(PREFIX)/sbin
+	install -D -m 0755 adb/adbd $(DESTDIR)/$(PREFIX)/sbin/
+	install -d -m 0755 $(DESTDIR)/$(PREFIX)/lib/systemd/system/
+	install -D -m 0755 adbd.service $(DESTDIR)/$(PREFIX)/lib/systemd/system/

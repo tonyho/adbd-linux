@@ -1,0 +1,16 @@
+[Unit]
+Description=ADB Daemon
+After=sysinit.target
+
+[Service]
+Type=simple
+ExecStartPre=/sbin/modprobe g_ffs idVendor=0x18d1 idProduct=0x4e26
+ExecStartPre=/bin/mkdir -p /dev/usb-ffs/adb
+ExecStartPre=/bin/mount -o uid=2000,gid=2000 -t functionfs adb /dev/usb-ffs/adb
+ExecStart=/bin/bash -c 'ADB_TRACE=1 /sbin/adbd 2> /var/log/adbd.err 1> /var/log/adbd.out'
+
+ExecStopPost=/bin/umount /dev/usb-ffs/adb
+
+[Install]
+WantedBy=basic.target
+Before=network.service
