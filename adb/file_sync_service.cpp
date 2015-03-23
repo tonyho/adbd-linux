@@ -40,7 +40,9 @@
 #include <android-base/stringprintf.h>
 #include <android-base/strings.h>
 #include <log/log.h>
+#ifndef ADB_NON_ANDROID
 #include <selinux/android.h>
+#endif
 
 static bool should_use_fs_config(const std::string& path) {
     // TODO: use fs_config to configure permissions on /data.
@@ -89,8 +91,10 @@ static bool secure_mkdirs(const std::string& path) {
         } else {
             if (chown(partial_path.c_str(), uid, gid) == -1) return false;
 
+#if !ADB_NON_ANDROID
             // Not all filesystems support setting SELinux labels. http://b/23530370.
             selinux_android_restorecon(partial_path.c_str(), 0);
+#endif
 
             if (!update_capabilities(partial_path.c_str(), capabilities)) return false;
         }
@@ -191,8 +195,10 @@ static bool handle_send_file(int s, const char* path, uid_t uid, gid_t gid, uint
             goto fail;
         }
 
+#if !ADB_NON_ANDROID
         // Not all filesystems support setting SELinux labels. http://b/23530370.
         selinux_android_restorecon(path, 0);
+#endif
 
         // fchown clears the setuid bit - restore it if present.
         // Ignore the result of calling fchmod. It's not supported
