@@ -20,6 +20,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#if ADB_NON_ANDROID
+#include <uchar.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
