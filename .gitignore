@@ -1,2 +1,5 @@
 *~
 *.pyc
+*.o
+*.a
+adb/adbd
