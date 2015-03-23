@@ -246,6 +246,12 @@ static int ShellService(const std::string& args, const atransport* transport) {
 
 #endif  // !ADB_HOST
 
+#if defined(ADB_HOST) || defined(ADB_NON_ANDROID)
+#define SHELL_COMMAND "/bin/sh"
+#else
+#define SHELL_COMMAND "/system/bin/sh"
+#endif
+
 static int create_service_thread(void (*func)(int, void *), void *cookie)
 {
     int s[2];
