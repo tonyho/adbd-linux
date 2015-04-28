@@ -408,7 +408,7 @@ static bool init_functionfs(struct usb_handle *h)
     }
 
     ret = adb_write(h->control, &v2_descriptor, sizeof(v2_descriptor));
-    if (ret < 0) {
+    if (ret < 0 && errno == EINVAL) {
         v1_descriptor.header.magic = cpu_to_le32(FUNCTIONFS_DESCRIPTORS_MAGIC);
         v1_descriptor.header.length = cpu_to_le32(sizeof(v1_descriptor));
         v1_descriptor.header.fs_count = 3;
@@ -417,10 +417,11 @@ static bool init_functionfs(struct usb_handle *h)
         v1_descriptor.hs_descs = hs_descriptors;
         D("[ %s: Switching to V1_descriptor format errno=%d ]", USB_FFS_ADB_EP0, errno);
         ret = adb_write(h->control, &v1_descriptor, sizeof(v1_descriptor));
-        if (ret < 0) {
-            D("[ %s: write descriptors failed: errno=%d ]", USB_FFS_ADB_EP0, errno);
-            goto err;
-        }
+    }
+
+    if (ret < 0) {
+        D("[ %s: write descriptors failed: errno=%d ]", USB_FFS_ADB_EP0, errno);
+        goto err;
     }
 
     ret = adb_write(h->control, &strings, sizeof(strings));
