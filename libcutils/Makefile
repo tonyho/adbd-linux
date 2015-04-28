@@ -18,7 +18,7 @@ commonSources := \
 	strdup8to16.c \
 	record_stream.c \
 	process_name.c \
-	properties.c \
+	properties_nonandroid.c \
 	threads.c \
 	sched_policy.c \
 	iosched_policy.c
@@ -43,7 +43,8 @@ LOCAL_CFLAGS += $(targetSmpFlag)
 ################################
 
 OBJS = $(LOCAL_SRC_FILES:.c=.o)
-CFLAGS = $(LOCAL_CFLAGS) -I../include -I. -DHAVE_PTHREADS=1
+CFLAGS = $(LOCAL_CFLAGS) -I../include -I. -DHAVE_PTHREADS=1 -DADB_NON_ANDROID=1
+CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
 
 %.o: %.c
 	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@

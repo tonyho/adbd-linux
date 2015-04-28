@@ -19,7 +19,9 @@
 
 #include <sys/cdefs.h>
 #include <stddef.h>
+#if !ADB_NON_ANDROID
 #include <sys/system_properties.h>
+#endif
 #include <stdint.h>
 
 #ifdef __cplusplus
