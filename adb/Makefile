@@ -42,7 +42,7 @@ LOCAL_CFLAGS := -O2 -g -DADB_HOST=0 -Wall -Wno-unused-parameter
 LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE -DHAVE_PTHREADS=1
 LOCAL_CFLAGS += -DADB_NON_ANDROID=1 -DADB_REVISION='"$(adb_version)"'
 LOCAL_CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
-LOCAL_INCLUDES := -I../include -I../base/include/ -I.
+LOCAL_INCLUDES := -I../include -I../base/include/ -I../libcrypto_utils/include/ -I.
 
 LOCAL_MODULE := adbd
 
