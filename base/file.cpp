@@ -22,6 +22,7 @@
 #include <sys/types.h>
 
 #include <string>
+#include <string.h>
 
 #include "android-base/macros.h"  // For TEMP_FAILURE_RETRY on Darwin.
 #include "android-base/utf8.h"
