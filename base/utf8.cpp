@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef ADB_NON_ANDROID
 #include <windows.h>
+#endif
 
 #include "android-base/utf8.h"
 
