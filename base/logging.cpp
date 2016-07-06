@@ -20,6 +20,7 @@
 
 #include "android-base/logging.h"
 
+#include <string.h>
 #include <libgen.h>
 #include <time.h>
 
