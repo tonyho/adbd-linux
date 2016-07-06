@@ -29,8 +29,11 @@
 
 #include <string>
 
-#include "adb.h"
 #include "adb_io.h"
+
+#if !ADB_NON_ANDROID
+
+#include "adb.h"
 #include "adb_utils.h"
 #include "cutils/properties.h"
 #include "fs_mgr.h"
@@ -150,3 +153,14 @@ void remount_service(int fd, void* cookie) {
 
     adb_close(fd);
 }
+#else
+bool make_block_device_writable(const std::string&)
+{
+    return false;
+}
+void remount_service(int fd, void* cookie)
+{
+    WriteFdExactly(fd, "remount failed, not implemented\n");
+    adb_close(fd);
+}
+#endif
