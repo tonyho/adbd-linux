@@ -30,12 +30,16 @@
 
 #include <android-base/logging.h>
 #include <android-base/stringprintf.h>
+#ifndef ADB_NON_ANDROID
 #include <libminijail.h>
+#endif
 
 #include "cutils/properties.h"
+#ifndef ADB_NON_ANDROID
 #include "debuggerd/client.h"
 #include "private/android_filesystem_config.h"
 #include "selinux/android.h"
+#endif
 
 #include "adb.h"
 #include "adb_auth.h"
@@ -45,6 +49,7 @@
 
 static const char* root_seclabel = nullptr;
 
+#ifndef ADB_NON_ANDROID
 static void drop_capabilities_bounding_set_if_needed(struct minijail *j) {
 #if defined(ALLOW_ADBD_ROOT)
     char value[PROPERTY_VALUE_MAX];
@@ -149,6 +154,7 @@ static void drop_privileges(int server_port) {
         }
     }
 }
+#endif
 
 int adbd_main(int server_port) {
     umask(0);
@@ -177,7 +183,9 @@ int adbd_main(int server_port) {
           " unchanged.\n");
     }
 
+#ifndef ADB_NON_ANDROID
     drop_privileges(server_port);
+#endif
 
     bool is_usb = false;
     if (access(USB_ADB_PATH, F_OK) == 0 || access(USB_FFS_ADB_EP0, F_OK) == 0) {
@@ -251,7 +259,9 @@ int main(int argc, char** argv) {
 
     close_stdin();
 
+#ifndef ADB_NON_ANDROID
     debuggerd_init(nullptr);
+#endif
     adb_trace_init(argv);
 
     D("Handling main()");
