@@ -30,7 +30,7 @@
 #include <cutils/properties.h>
 #endif
 
-#if !ADB_HOST
+#if !defined(ADB_HOST) && defined(__ANDROID__)
 const char* adb_device_banner = "device";
 static android::base::LogdLogger gLogdLogger;
 #else
@@ -41,13 +41,13 @@ void AdbLogger(android::base::LogId id, android::base::LogSeverity severity,
                const char* tag, const char* file, unsigned int line,
                const char* message) {
     android::base::StderrLogger(id, severity, tag, file, line, message);
-#if !ADB_HOST
+#if !defined(ADB_HOST) && defined(__ANDROID__)
     gLogdLogger(id, severity, tag, file, line, message);
 #endif
 }
 
 
-#if !ADB_HOST
+#if !defined(ADB_HOST) && defined(__ANDROID__)
 static std::string get_log_file_name() {
     struct tm now;
     time_t t;
@@ -88,7 +88,7 @@ std::string get_trace_setting_from_env() {
     return std::string(setting);
 }
 
-#if !ADB_HOST
+#if !defined(ADB_HOST) && defined(__ANDROID__)
 std::string get_trace_setting_from_prop() {
     char buf[PROPERTY_VALUE_MAX];
     property_get("persist.adb.trace_mask", buf, "");
@@ -97,10 +97,10 @@ std::string get_trace_setting_from_prop() {
 #endif
 
 std::string get_trace_setting() {
-#if ADB_HOST
-    return get_trace_setting_from_env();
-#else
+#if !defined(ADB_HOST) && defined(__ANDROID__)
     return get_trace_setting_from_prop();
+#else
+    return get_trace_setting_from_env();
 #endif
 }
 
@@ -153,7 +153,7 @@ static void setup_trace_mask() {
 }
 
 void adb_trace_init(char** argv) {
-#if !ADB_HOST
+#if !defined(ADB_HOST) && defined(__ANDROID__)
     // Don't open log file if no tracing, since this will block
     // the crypto unmount of /data
     if (!get_trace_setting().empty()) {
