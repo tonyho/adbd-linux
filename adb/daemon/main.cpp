@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <sys/prctl.h>
+#include <linux/capability.h>
 
 #include <memory>
 
