@@ -50,7 +50,7 @@ OBJS = $(LOCAL_SRC_FILES:.c=.o) $(LOCAL_CXX_SRC_FILES:.cpp=.o)
 CFLAGS = $(LOCAL_CFLAGS) -I../include -I. -DHAVE_PTHREADS=1 -DADB_NON_ANDROID=1
 CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
 
-all: $(LOCAL_MODULE) test-libcutils
+all: $(LOCAL_MODULE)
 
 %.o: %.cpp
 	g++ -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
@@ -61,9 +61,6 @@ all: $(LOCAL_MODULE) test-libcutils
 $(LOCAL_MODULE): $(OBJS)
 	ar rcs $@ $?
 	ranlib $@
-
-test-libcutils: $(LOCAL_MODULE) test-libcutils.o
-	gcc -o $@ $< test-libcutils.o
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o

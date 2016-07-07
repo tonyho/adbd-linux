@@ -3,4 +3,3 @@
 *.o
 *.a
 adb/adbd
-libcutils/test-libcutils
