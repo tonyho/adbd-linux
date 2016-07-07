@@ -2,21 +2,12 @@
 targetSmpFlag := -DANDROID_SMP=1
 
 commonSources := \
-	errors_test.cpp \
 	errors_unix.cpp \
 	file.cpp \
-	file_test.cpp \
 	logging.cpp \
-	logging_test.cpp \
-	parseint_test.cpp \
 	parsenetaddress.cpp \
-	parsenetaddress_test.cpp \
 	stringprintf.cpp \
-	stringprintf_test.cpp \
-	strings.cpp \
-	strings_test.cpp \
-	test_main.cpp \
-	test_utils.cpp
+	strings.cpp
 
 # Shared and static library for target
 # ========================================================

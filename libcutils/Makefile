@@ -36,17 +36,24 @@ LOCAL_SRC_FILES := $(commonSources) \
 	klog.c
 # LOCAL_SRC_FILES += memory.c
 
+LOCAL_CXX_SRC_FILES := \
+	sockets.cpp \
+	sockets_unix.cpp
+
 LOCAL_C_INCLUDES := $(KERNEL_HEADERS)
 LOCAL_STATIC_LIBRARIES := liblog
 LOCAL_CFLAGS += $(targetSmpFlag)
 
 ################################
 
-OBJS = $(LOCAL_SRC_FILES:.c=.o)
+OBJS = $(LOCAL_SRC_FILES:.c=.o) $(LOCAL_CXX_SRC_FILES:.cpp=.o)
 CFLAGS = $(LOCAL_CFLAGS) -I../include -I. -DHAVE_PTHREADS=1 -DADB_NON_ANDROID=1
 CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
 
 all: $(LOCAL_MODULE) test-libcutils
+
+%.o: %.cpp
+	g++ -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
 %.o: %.c
 	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@

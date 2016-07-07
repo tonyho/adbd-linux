@@ -1,18 +1,22 @@
 all: adb/adbd adbd.service
 
 libcutils/libcutils.a: libcutils/*.c libcutils/*.cpp
-	pushd libcutils ; make ; popd
+	make -C libcutils
 
 base/libbase.a: base/*.cpp
-	pushd base ; make ; popd
+	make -C base
 
-adb/adbd: libcutils/libcutils.a base/libbase.a adb/*.cpp
-	pushd adb ; make ; popd
+libcrypto_utils/libcrypto_utils.a: libcrypto_utils/android_pubkey.c
+	make -C libcrypto_utils
+
+adb/adbd: libcutils/libcutils.a base/libbase.a libcrypto_utils/libcrypto_utils.a adb/*.cpp
+	make -C adb
 
 clean:
-	pushd libcutils ; make clean ; popd
-	pushd adb ; make clean ; popd
-	rm -f adb/adbd libcutils/libcutils.a base/libbase.a
+	make -C libcutils clean
+	make -C base clean
+	make -C libcrypto_utils clean
+	make -C adb clean
 
 install: all
 	install -d -m 0755 $(DESTDIR)/$(PREFIX)/sbin

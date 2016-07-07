@@ -6,12 +6,18 @@ adb_version := $(shell git -C $(LOCAL_PATH) rev-parse --short=12 HEAD 2>/dev/nul
 LIBADB_SRC_FILES := \
     adb.cpp \
     adb_auth.cpp \
+    adb_utils.cpp \
+    adb_trace.cpp \
     adb_io.cpp \
     adb_listeners.cpp \
+    diagnose_usb.cpp \
+    shell_service.cpp \
+    shell_service_protocol.cpp \
     sockets.cpp \
     transport.cpp \
     transport_local.cpp \
-    transport_usb.cpp
+    transport_usb.cpp \
+    log-non-android.cpp
 
 LIBADB_linux_SRC_FILES := \
     fdevent.cpp \
@@ -28,7 +34,8 @@ LOCAL_SRC_FILES += \
     file_sync_service.cpp \
     framebuffer_service.cpp \
     remount_service.cpp \
-    set_verity_enable_state_service.cpp
+    set_verity_enable_state_service.cpp \
+    daemon/main.cpp
 
 # DISABLED SOURCES for ADB_NON_ANDROID:
 #   qemu_tracing.cpp
@@ -41,7 +48,7 @@ LOCAL_SRC_C_FILES := \
 LOCAL_CFLAGS := -O2 -g -DADB_HOST=0 -Wall -Wno-unused-parameter
 LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE -DHAVE_PTHREADS=1
 LOCAL_CFLAGS += -DADB_NON_ANDROID=1 -DADB_REVISION='"$(adb_version)"'
-LOCAL_CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
+LOCAL_CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92 -DALLOW_ADBD_NO_AUTH=1
 LOCAL_INCLUDES := -I../include -I../base/include/ -I../libcrypto_utils/include/ -I.
 
 LOCAL_MODULE := adbd
@@ -55,7 +62,7 @@ LOCAL_STATIC_LIBRARIES := libcutils libc
 ################################
 
 OBJS = $(LOCAL_SRC_FILES:.cpp=.o) $(LOCAL_SRC_C_FILES:.c=.o)
-CXXFLAGS = -std=c++0x $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
+CXXFLAGS = -std=c++14 $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
 CFLAGS= $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
 
 %.o: %.cpp
@@ -65,7 +72,7 @@ CFLAGS= $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
 	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
 $(LOCAL_MODULE): $(OBJS)
-	g++ -fPIC $(CXXFLAGS) $^ -L ../libcutils/*.o -lpthread -lresolv -lcrypto -lssl -o $@
+	g++ -fPIC $(CXXFLAGS) $^ -L ../libcutils/*.o ../base/*.o ../libcrypto_utils/*.o -lpthread -lresolv -lcrypto -lssl -lutil -o $@
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o
