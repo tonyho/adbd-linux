@@ -147,6 +147,10 @@ bool CreateSocketpair(unique_fd* fd1, unique_fd* fd2) {
     return true;
 }
 
+#ifdef __GNUC__
+#define _Nonnull
+#endif
+
 class Subprocess {
   public:
     Subprocess(const std::string& command, const char* terminal_type,
