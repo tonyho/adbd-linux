@@ -204,9 +204,11 @@ int adbd_main(int server_port) {
         local_init(DEFAULT_ADB_LOCAL_TRANSPORT_PORT);
     }
 
+#ifndef ADB_NON_ANDROID
     D("adbd_main(): pre init_jdwp()");
     init_jdwp();
     D("adbd_main(): post init_jdwp()");
+#endif
 
     D("Event loop starting");
     fdevent_loop();

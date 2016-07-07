@@ -319,8 +319,10 @@ int service_to_fd(const char* name, const atransport* transport) {
         ret = unix_open(name + 4, O_RDWR | O_CLOEXEC);
     } else if(!strncmp(name, "framebuffer:", 12)) {
         ret = create_service_thread(framebuffer_service, 0);
+#ifndef ADB_NON_ANDROID
     } else if (!strncmp(name, "jdwp:", 5)) {
         ret = create_jdwp_connection_fd(atoi(name+5));
+#endif
     } else if(!strncmp(name, "shell", 5)) {
         ret = ShellService(name + 5, transport);
     } else if(!strncmp(name, "exec:", 5)) {
