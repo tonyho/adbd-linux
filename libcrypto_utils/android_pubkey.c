@@ -54,7 +54,8 @@ typedef struct RSAPublicKey {
 
 // Reverses byte order in |buffer|.
 static void reverse_bytes(uint8_t* buffer, size_t size) {
-  for (size_t i = 0; i < (size + 1) / 2; ++i) {
+  size_t i;
+  for (i = 0; i < (size + 1) / 2; ++i) {
     uint8_t tmp = buffer[i];
     buffer[i] = buffer[size - i - 1];
     buffer[size - i - 1] = tmp;
