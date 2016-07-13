@@ -106,6 +106,7 @@ static int __inline__ qemu_pipe_frame_send(int fd,
 // end-of-stream.
 static int __inline__ qemu_pipe_frame_recv(int fd, void* buff, size_t len) {
     char header[5];
+    size_t read_ret;
     ssize_t ret = TEMP_FAILURE_RETRY(read(fd, header, 4));
     if (ret != 4) {
         QEMU_PIPE_DEBUG("Can't read qemud frame header: %s", strerror(errno));
@@ -122,8 +123,8 @@ static int __inline__ qemu_pipe_frame_recv(int fd, void* buff, size_t len) {
                         len);
         return -1;
     }
-    ret = TEMP_FAILURE_RETRY(read(fd, buff, size));
-    if (ret != size) {
+    read_ret = TEMP_FAILURE_RETRY(read(fd, buff, size));
+    if (read_ret != size) {
         QEMU_PIPE_DEBUG("Could not read qemud frame payload: %s",
                         strerror(errno));
         return -1;
