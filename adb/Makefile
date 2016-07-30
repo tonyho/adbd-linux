@@ -71,8 +71,13 @@ CFLAGS= $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
 %.o: %.c
 	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
+all: $(LOCAL_MODULE) xdg-adbd
+
 $(LOCAL_MODULE): $(OBJS)
 	g++ -fPIC $(CXXFLAGS) $^ -L ../libcutils/*.o ../base/*.o ../libcrypto_utils/*.o -lpthread -lresolv -lcrypto -lssl -lutil -o $@
+
+xdg-adbd: xdg-adbd.c
+	gcc -o $@ $< $(CFLAGS) $(LFLAGS) `pkg-config --libs --cflags glib-2.0`
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o

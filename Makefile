@@ -9,7 +9,7 @@ base/libbase.a: base/*.cpp
 libcrypto_utils/libcrypto_utils.a: libcrypto_utils/android_pubkey.c
 	make -C libcrypto_utils
 
-adb/adbd: libcutils/libcutils.a base/libbase.a libcrypto_utils/libcrypto_utils.a adb/*.cpp
+adb/adbd adb/xdg-adbd: libcutils/libcutils.a base/libbase.a libcrypto_utils/libcrypto_utils.a adb/*.cpp adb/xdg-adbd.c
 	make -C adb
 
 clean:
@@ -21,5 +21,6 @@ clean:
 install: all
 	install -d -m 0755 $(DESTDIR)/$(PREFIX)/sbin
 	install -D -m 0755 adb/adbd $(DESTDIR)/$(PREFIX)/sbin/
+	install -D -m 0755 adb/xdg-adbd $(DESTDIR)/$(PREFIX)/sbin/
 	install -d -m 0755 $(DESTDIR)/$(PREFIX)/lib/systemd/system/
 	install -D -m 0755 adbd.service $(DESTDIR)/$(PREFIX)/lib/systemd/system/
