@@ -85,5 +85,5 @@ xdg-adbd: xdg-adbd.c
 	gcc -o $@ $< $(CFLAGS) $(LFLAGS) `pkg-config --libs --cflags glib-2.0`
 
 clean:
-	rm -f $(LOCAL_MODULE) *.o daemon/*.o
+	rm -f $(LOCAL_MODULE) xdg-adbd *.o daemon/*.o
 
