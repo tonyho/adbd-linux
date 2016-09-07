@@ -1,3 +1,7 @@
+top_srcdir ?= ..
+srcdir = $(top_srcdir)/libcutils
+VPATH = $(srcdir)
+include $(top_srcdir)/include.mk
 
 targetSmpFlag := -DANDROID_SMP=1
 
@@ -47,16 +51,18 @@ LOCAL_CFLAGS += $(targetSmpFlag)
 ################################
 
 OBJS = $(LOCAL_SRC_FILES:.c=.o) $(LOCAL_CXX_SRC_FILES:.cpp=.o)
-CFLAGS = $(LOCAL_CFLAGS) -I../include -I. -DHAVE_PTHREADS=1 -DADB_NON_ANDROID=1
-CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
+EXTRA_CFLAGS = $(LOCAL_CFLAGS) -I$(top_srcdir)/include -I$(srcdir) -DHAVE_PTHREADS=1 -DADB_NON_ANDROID=1
+EXTRA_CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
+CFLAGS = $(OPT_CFLAGS) $(EXTRA_CFLAGS)
+CXXFLAGS = $(OPT_CXXFLAGS) $(EXTRA_CFLAGS)
 
 all: $(LOCAL_MODULE)
 
 %.o: %.cpp
-	g++ -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	g++ -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
 
 %.o: %.c
-	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	gcc -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
 $(LOCAL_MODULE): $(OBJS)
 	ar rcs $@ $?
