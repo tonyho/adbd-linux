@@ -1,6 +1,11 @@
 # makefile to build adbd natively for linux:
 
-LOCAL_PATH:= $(shell pwd)
+top_srcdir ?= ..
+srcdir = $(top_srcdir)/adb
+VPATH = $(srcdir)
+include $(top_srcdir)/include.mk
+
+LOCAL_PATH:= $(shell cd $(top_srcdir) && pwd)
 adb_version := $(shell git -C $(LOCAL_PATH) rev-parse --short=12 HEAD 2>/dev/null)-android
 
 LIBADB_SRC_FILES := \
@@ -45,11 +50,11 @@ LOCAL_SRC_FILES += \
 LOCAL_SRC_C_FILES := \
 	usb_linux_client.c
 
-LOCAL_CFLAGS := -O2 -g -DADB_HOST=0 -Wall -Wno-unused-parameter
+LOCAL_CFLAGS := -DADB_HOST=0 -Wall -Wno-unused-parameter
 LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE -DHAVE_PTHREADS=1
 LOCAL_CFLAGS += -DADB_NON_ANDROID=1 -DADB_REVISION='"$(adb_version)"'
 LOCAL_CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92 -DALLOW_ADBD_NO_AUTH=1
-LOCAL_INCLUDES := -I../include -I../base/include/ -I../libcrypto_utils/include/ -I.
+LOCAL_INCLUDES := -I$(top_srcdir)/include -I$(top_srcdir)/base/include/ -I$(top_srcdir)/libcrypto_utils/include/ -I$(srcdir)
 
 LOCAL_MODULE := adbd
 
@@ -62,8 +67,8 @@ LOCAL_STATIC_LIBRARIES := libcutils libc
 ################################
 
 OBJS = $(LOCAL_SRC_FILES:.cpp=.o) $(LOCAL_SRC_C_FILES:.c=.o)
-CXXFLAGS = -std=c++14 $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
-CFLAGS= $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
+CXXFLAGS = $(OPT_CXXFLAGS) -std=c++14 $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
+CFLAGS= $(OPT_CFLAGS) $(LOCAL_CFLAGS) $(LOCAL_INCLUDES)
 
 %.o: %.cpp
 	g++ -g -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
@@ -80,5 +85,5 @@ xdg-adbd: xdg-adbd.c
 	gcc -o $@ $< $(CFLAGS) $(LFLAGS) `pkg-config --libs --cflags glib-2.0`
 
 clean:
-	rm -f $(LOCAL_MODULE) *.o
+	rm -f $(LOCAL_MODULE) xdg-adbd *.o daemon/*.o
 
