@@ -1,6 +1,7 @@
 [Unit]
 Description=ADB Daemon
 After=sysinit.target
+Before=network.service
 
 [Service]
 Type=simple
@@ -11,4 +12,3 @@ ExecStopPost=/bin/umount /dev/usb-ffs/adb
 
 [Install]
 WantedBy=basic.target
-Before=network.service
