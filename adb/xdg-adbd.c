@@ -23,7 +23,8 @@
 #include <sys/mount.h>
 
 #define CONFIGFS "/sys/kernel/config"
-#define GADGET1  CONFIGFS "/usb_gadget/g1"
+#define GADGET   CONFIGFS "/usb_gadget"
+#define GADGET1  GADGET "/g1"
 #define VENDOR   "0x18d1"
 #define PRODUCT  "0x4E26"
 
@@ -56,8 +57,8 @@ start (void)
 	char *serial;
 
 	/* Create gadget */
-	if (!g_file_test (CONFIGFS, G_FILE_TEST_IS_DIR))
-		return error (CONFIGFS " does not exist");
+	if (!g_file_test (GADGET, G_FILE_TEST_IS_DIR)) /* no usb gadget framework */
+                return 0;
 	if (g_mkdir_with_parents (GADGET1, 0755) < 0)
 		return error ("failed to create gadget directory");
 	/* Set default Vendor and Product IDs */
@@ -105,6 +106,9 @@ start (void)
 static int
 stop (void)
 {
+	if (!g_file_test (GADGET, G_FILE_TEST_IS_DIR))
+                return 0;
+
 	return 1;
 }
 
