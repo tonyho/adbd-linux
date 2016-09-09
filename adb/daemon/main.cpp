@@ -231,6 +231,7 @@ int main(int argc, char** argv) {
             {"root_seclabel", required_argument, nullptr, 's'},
             {"device_banner", required_argument, nullptr, 'b'},
             {"version", no_argument, nullptr, 'v'},
+            {0},
         };
 
         int option_index = 0;
