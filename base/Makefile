@@ -39,11 +39,14 @@ CXXFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
 all: $(LOCAL_MODULE)
 
 %.o: %.cpp
-	g++ -g -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
+	${CXX} -g -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
+	#g++ -g -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
 
 $(LOCAL_MODULE): $(OBJS)
-	ar rcs $@ $?
-	ranlib $@
+	#ar rcs $@ $?
+	#ranlib $@
+	${AR} rcs $@ $?
+	${RANLIB} $@
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o

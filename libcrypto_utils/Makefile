@@ -15,11 +15,14 @@ CFLAGS += -DPROP_NAME_MAX=32 -DPROP_VALUE_MAX=92
 all: $(LOCAL_MODULE)
 
 %.o: %.c
-	gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	${CC} -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	#gcc -g -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
 $(LOCAL_MODULE): $(OBJS)
-	ar rcs $@ $?
-	ranlib $@
+	${AR} rcs $@ $?
+	${RANLIB} $@
+	#ar rcs $@ $?
+	#ranlib $@
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o

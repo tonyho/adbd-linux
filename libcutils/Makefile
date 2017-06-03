@@ -59,14 +59,18 @@ CXXFLAGS = $(OPT_CXXFLAGS) $(EXTRA_CFLAGS)
 all: $(LOCAL_MODULE)
 
 %.o: %.cpp
-	g++ -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
+	${CXX} -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
+	#g++ -c -fPIC $(CXXFLAGS) $(LFLAGS) $< -o $@
 
 %.o: %.c
-	gcc -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	${CC} -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
+	#gcc -c -fPIC $(CFLAGS) $(LFLAGS) $< -o $@
 
 $(LOCAL_MODULE): $(OBJS)
-	ar rcs $@ $?
-	ranlib $@
+	${AR} rcs $@ $?
+	#ar rcs $@ $?
+	#ranlib $@
+	${RANLIB} $@
 
 clean:
 	rm -f $(LOCAL_MODULE) *.o
